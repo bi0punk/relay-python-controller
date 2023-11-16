@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Bomba de Agua</title>
+</head>
+<body>
+    <h2>Control de Bomba de Agua</h2>
+
+    <form action="/control" method="post" id="controlForm">
+        <button type="button" onclick="sendCommand('open')">Abrir Bomba</button>
+        <button type="button" onclick="sendCommand('close')">Cerrar Bomba</button>
+    </form>
+
+    <script>
+        function sendCommand(command) {
+            fetch('/control', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({command: command})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 200) {
+                    alert(data.message);
+                } else {
+                    alert('Error en la solicitud');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
