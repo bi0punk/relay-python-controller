@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+import json
 import requests
 
 app = Flask(__name__)
@@ -12,15 +13,12 @@ def index():
 
 @app.route('/control', methods=['POST'])
 def control():
-    command = request.json.get('command')
+    command = request.form.get('command')  # Cambia a request.form para obtener datos de formulario
 
-    if command == 'open':
-        response = requests.post(url, data=json.dumps({"command": "open"}), headers={"Content-Type": "application/json"})
-        return jsonify(status=response.status_code, message='Bomba de agua abierta')
-
-    elif command == 'close':
-        response = requests.post(url, data=json.dumps({"command": "close"}), headers={"Content-Type": "application/json"})
-        return jsonify(status=response.status_code, message='Bomba de agua cerrada')
+    if command in ['open1', 'close1', 'open2', 'close2', 'open3', 'close3', 'open4', 'close4']:
+        response = requests.post(url, data={'command': command})
+        relay_number = command[-1]  # Obtén el número de relé del comando
+        return jsonify(status=response.status_code, message=f'Relé {relay_number} {command[:-1]}ado')
 
     return jsonify(status=400, message='Comando no válido')
 
