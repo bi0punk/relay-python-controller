@@ -9,8 +9,17 @@
     <h2>Control de Bomba de Agua</h2>
 
     <form action="/control" method="post" id="controlForm">
-        <button type="button" onclick="sendCommand('open')">Abrir Bomba</button>
-        <button type="button" onclick="sendCommand('close')">Cerrar Bomba</button>
+        <button type="submit" name="command" value="open1">Abrir Relé 1</button>
+        <button type="submit" name="command" value="close1">Cerrar Relé 1</button>
+
+        <button type="submit" name="command" value="open2">Abrir Relé 2</button>
+        <button type="submit" name="command" value="close2">Cerrar Relé 2</button>
+
+        <button type="submit" name="command" value="open3">Abrir Relé 3</button>
+        <button type="submit" name="command" value="close3">Cerrar Relé 3</button>
+
+        <button type="submit" name="command" value="open4">Abrir Relé 4</button>
+        <button type="submit" name="command" value="close4">Cerrar Relé 4</button>
     </form>
 
     <script>
@@ -18,9 +27,9 @@
             fetch('/control', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: JSON.stringify({command: command})
+                body: `command=${command}`
             })
             .then(response => response.json())
             .then(data => {
@@ -32,6 +41,14 @@
             })
             .catch(error => console.error('Error:', error));
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('controlForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const command = event.submitter.value;
+                sendCommand(command);
+            });
+        });
     </script>
 </body>
 </html>
