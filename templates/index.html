@@ -1,54 +1,48 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Bomba de Agua</title>
+    <title>Control de Relay</title>
 </head>
 <body>
-    <h2>Control de Bomba de Agua</h2>
-
-    <form action="/control" method="post" id="controlForm">
-        <button type="submit" name="command" value="open1">Abrir Relé 1</button>
-        <button type="submit" name="command" value="close1">Cerrar Relé 1</button>
-
-        <button type="submit" name="command" value="open2">Abrir Relé 2</button>
-        <button type="submit" name="command" value="close2">Cerrar Relé 2</button>
-
-        <button type="submit" name="command" value="open3">Abrir Relé 3</button>
-        <button type="submit" name="command" value="close3">Cerrar Relé 3</button>
-
-        <button type="submit" name="command" value="open4">Abrir Relé 4</button>
-        <button type="submit" name="command" value="close4">Cerrar Relé 4</button>
+    <h1>Control de Relay</h1>
+    <form action="/send_command" method="post">
+        <button type="submit" name="command" value="open">Encender</button>
+        <button type="submit" name="command" value="close">Apagar</button>
+        <button type="submit" name="command" value="exit">Salir</button>
+        <br>
+        <h2>Control Individual de Relays</h2>
+        <button type="submit" name="command" value="relay1_on">Relay 1 Encender</button>
+        <button type="submit" name="command" value="relay1_off">Relay 1 Apagar</button>
+        <br>
+        <button type="submit" name="command" value="relay2_on">Relay 2 Encender</button>
+        <button type="submit" name="command" value="relay2_off">Relay 2 Apagar</button>
+        <br>
+        <button type="submit" name="command" value="relay3_on">Relay 3 Encender</button>
+        <button type="submit" name="command" value="relay3_off">Relay 3 Apagar</button>
     </form>
 
-    <script>
-        function sendCommand(command) {
-            fetch('/control', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `command=${command}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 200) {
-                    alert(data.message);
-                } else {
-                    alert('Error en la solicitud');
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('controlForm').addEventListener('submit', function(event) {
-                event.preventDefault();
-                const command = event.submitter.value;
-                sendCommand(command);
-            });
-        });
-    </script>
+    <h2>Historial de Acciones</h2>
+    <table border="1">
+        <tr>
+            <th>Relay</th>
+            <th>Accion</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+        </tr>
+        {% for entry in action_history %}
+            <tr>
+                <td>{{ entry.relay }}</td>
+                <td>{{ entry.accion }}</td>
+                <td>{{ entry.fecha }}</td>
+                <td>{{ entry.hora }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>
