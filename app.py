@@ -1,26 +1,39 @@
-from flask import Flask, render_template, request, jsonify
-import json
 import requests
-
-app = Flask(__name__)
+import json
 
 # Configura la URL de tu placa Wemos D1
-url = "http://192.168.1.115/control"  # Reemplaza con la dirección IP de tu placa
+url = "http://192.168.1.112/control"  # Reemplaza con la dirección IP de tu placa
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+# Define los códigos ANSI para colores
+GREEN = "\033[92m"
+RED = "\033[91m"
+RESET = "\033[0m"
+while True:
+    # Solicitar al usuario ingresar el comando
+    user_input = input("Ingrese el comando (open/close/exit): ").strip().lower()
 
-@app.route('/control', methods=['POST'])
-def control():
-    command = request.form.get('command')  # Cambia a request.form para obtener datos de formulario
+    if user_input == "open":
+        # Enviar el comando para abrir la bomba
+        response = requests.post(url, data=json.dumps({"command": "open"}), headers={"Content-Type": "application/json"})
 
-    if command in ['open1', 'close1', 'open2', 'close2', 'open3', 'close3', 'open4', 'close4']:
-        response = requests.post(url, data={'command': command})
-        relay_number = command[-1]  # Obtén el número de relé del comando
-        return jsonify(status=response.status_code, message=f'Relé {relay_number} {command[:-1]}ado')
+        # Verificar la respuesta del servidor
+        if response.status_code == 200:
+            print(GREEN + "Bomba de agua abierta" + RESET)
+        else:
+            print(RED + "Error en la solicitud" + RESET)
 
-    return jsonify(status=400, message='Comando no válido')
+    elif user_input == "close":
+        # Enviar el comando para cerrar la bomba
+        response = requests.post(url, data=json.dumps({"command": "close"}), headers={"Content-Type": "application/json"})
 
-if __name__ == '__main__':
-    app.run(debug=True)
+        # Verificar la respuesta del servidor
+        if response.status_code == 200:
+            print(RED + "Bomba de agua cerrada" + RESET)
+        else:
+            print(RED + "Error en la solicitud" + RESET)
+
+    elif user_input == "exit":
+        break  # Salir del bucle si el usuario ingresa "exit"
+
+    else:
+        print("Comando no válido. Ingrese 'open', 'close' o 'exit'.")
