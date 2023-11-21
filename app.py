@@ -5,7 +5,7 @@ while True:
     if command.lower() == 'q':
         break
     
-    url = f"http://direccion_ip_de_tu_wemos/command?command={command}"
+    url = f"http://192.168.1.115/command?command={command}"
     response = requests.get(url)
     
     print(f"Respuesta del servidor: {response.text}")
