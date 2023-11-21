@@ -12,11 +12,17 @@ void handleCommand() {
   String command = server.arg("command");
 
   // Analizar el comando recibido
-  if (command.startsWith("open") || command.startsWith("close")) {
+  if (command.startsWith("open")) {
     int relayNum = command.substring(4).toInt();
     if (relayNum >= 1 && relayNum <= 4) {
-      int state = (command.startsWith("open")) ? LOW : HIGH;
-      digitalWrite(relayPin[relayNum - 1], state);  // Cambiar el estado del relé
+      digitalWrite(relayPin[relayNum - 1], LOW);  // Enciende el relé
+      server.send(200, "text/plain", "Comando recibido: " + command);
+      return;
+    }
+  } else if (command.startsWith("close")) {
+    int relayNum = command.substring(5).toInt();
+    if (relayNum >= 1 && relayNum <= 4) {
+      digitalWrite(relayPin[relayNum - 1], HIGH);  // Apaga el relé
       server.send(200, "text/plain", "Comando recibido: " + command);
       return;
     }
