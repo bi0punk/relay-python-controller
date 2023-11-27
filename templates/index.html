@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control de Arduino</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
     <h1>Control de Arduino</h1>
@@ -23,8 +24,22 @@
         <button type="submit" name="command" value="off4">Apagar Dispositivo 4</button>
     </form>
     
-    {% if response %}
-        <p>Respuesta del Arduino: {{ response }}</p>
-    {% endif %}
+    <div id="sensorData">
+        <!-- La respuesta del sensor se mostrará aquí -->
+    </div>
+
+    <script>
+        // Función para actualizar dinámicamente la página cada minuto
+        function updateSensorData() {
+            $.get("/command?command=read_humidity", function(data) {
+                $("#sensorData").html(data);
+            });
+        }
+
+        // Llamar a la función de actualización inicialmente y luego cada minuto
+        updateSensorData();
+        setInterval(updateSensorData, 60000); // 60000 milisegundos = 1 minuto
+    </script>
+
 </body>
 </html>
