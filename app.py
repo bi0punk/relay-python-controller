@@ -1,5 +1,4 @@
 import socket
-import time
 
 # Dirección IP y puerto del Arduino
 arduino_ip = "192.168.1.177"
@@ -13,7 +12,11 @@ def send_command(command):
         data = s.recv(1024)
     print("Respuesta del Arduino:", data.decode())
 
-# Enviar comandos al Arduino (puedes ajustar estos comandos según tus necesidades)
-send_command("on1")
-time.sleep(2)  # Esperar 2 segundos
-send_command("off1")
+# Loop para ingresar comandos desde el teclado
+while True:
+    user_input = input("Ingrese un comando (o 'exit' para salir): ")
+    
+    if user_input.lower() == 'exit':
+        break
+    
+    send_command(user_input)
