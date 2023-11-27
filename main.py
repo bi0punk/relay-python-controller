@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import socket
+
 app = Flask(__name__)
 
 # Dirección IP y puerto del Arduino
@@ -14,6 +15,12 @@ def send_command(command):
         data = s.recv(1024)
     return data.decode()
 
+# Nueva función para obtener lectura del sensor de humedad
+def get_humidity():
+    command = "read_humidity"
+    response = send_command(command)
+    return response
+
 # Rutas para la interfaz web
 @app.route('/')
 def index():
@@ -22,7 +29,10 @@ def index():
 @app.route('/command', methods=['POST'])
 def command():
     command = request.form['command']
-    response = send_command(command)
+    if command == "read_humidity":
+        response = get_humidity()
+    else:
+        response = send_command(command)
     return render_template('index.html', response=response)
 
 if __name__ == '__main__':
