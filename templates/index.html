@@ -2,11 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Control de Arduino</title>
 </head>
 <body>
+    <h1>Control de Arduino</h1>
     
+    <form action="/command" method="post">
+        <button type="submit" name="command" value="on1">Encender Dispositivo 1</button>
+        <button type="submit" name="command" value="off1">Apagar Dispositivo 1</button>
+        <br>
+        <button type="submit" name="command" value="on2">Encender Dispositivo 2</button>
+        <button type="submit" name="command" value="off2">Apagar Dispositivo 2</button>
+        <br>
+        <!-- Agrega más botones según sea necesario -->
+        <button type="submit" name="command" value="on3">Encender Dispositivo 3</button>
+        <button type="submit" name="command" value="off3">Apagar Dispositivo 3</button>
+        <br>
+        <button type="submit" name="command" value="on4">Encender Dispositivo 4</button>
+        <button type="submit" name="command" value="off4">Apagar Dispositivo 4</button>
+    </form>
+    
+    {% if response %}
+        <p>Respuesta del Arduino: {{ response }}</p>
+    {% endif %}
 </body>
 </html>
