@@ -64,6 +64,12 @@ void loop() {
       int moistureValue = analogRead(moisturePin);
       client.print("Valor del sensor de humedad: ");
       client.println(moistureValue);
+    } else if (command.startsWith("read_humidity")) {
+      // Enviar lectura del sensor de humedad al cliente
+      int moistureValue = analogRead(moisturePin);
+      client.print("Humedad: ");
+      client.print(moistureValue);
+      client.println("%");
     } else {
       client.println("Comando no válido");
     }
