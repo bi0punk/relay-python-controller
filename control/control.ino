@@ -1,8 +1,8 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 
-const char* ssid = "CAPI";
-const char* password = "NOAH2016";
+const char* ssid = "Hermes";
+const char* password = "CAMBIA_WIFI_PASSWORD";
 
 ESP8266WebServer server(80);
 
