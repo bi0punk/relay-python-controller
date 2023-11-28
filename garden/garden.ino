@@ -54,14 +54,15 @@ void loop() {
     } else if (command.startsWith("read")) {
       int moistureValue = analogRead(moisturePin);
 
-      // Enviar el valor del sensor de humedad como una solicitud POST al servidor Python
+      // Enviar el valor del sensor de humedad solo como una solicitud POST a la ruta /humidity en el servidor Python
       client.println("POST /humidity HTTP/1.1");
-      client.println("Host: 192.168.1.177");
+      client.println("Host: 192.168.1.129");  // Cambiar a la dirección correcta del servidor Flask
       client.println("Content-Type: application/x-www-form-urlencoded");
       client.print("Content-Length: ");
-      client.println(String(moistureValue).length());
+      client.println(String("moisture=" + String(moistureValue)).length());
       client.println();
-      client.println(String(moistureValue));
+      client.print("moisture=");
+      client.println(moistureValue);
     } else {
       client.println("Comando no válido");
     }
