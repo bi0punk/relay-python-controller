@@ -56,7 +56,7 @@ void loop() {
 
       // Enviar el valor del sensor de humedad solo como una solicitud POST a la ruta /humidity en el servidor Python
       client.println("POST /humidity HTTP/1.1");
-      client.println("Host: 192.168.1.129");  // Cambiar a la dirección correcta del servidor Flask
+      client.println("Host: 192.168.1.129:5000/command");  // Cambiar a la dirección correcta del servidor Flask
       client.println("Content-Type: application/x-www-form-urlencoded");
       client.print("Content-Length: ");
       client.println(String("moisture=" + String(moistureValue)).length());
