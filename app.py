@@ -12,11 +12,16 @@ def send_command(command):
         data = s.recv(1024)
     print("Respuesta del Arduino:", data.decode())
 
-# Loop para ingresar comandos desde el teclado
+ALLOWED_COMMANDS = {"on1", "off1", "on2", "off2", "on3", "off3", "read_humidity", "read_temp", "read_all"}
+
 while True:
     user_input = input("Ingrese un comando (o 'exit' para salir): ")
     
     if user_input.lower() == 'exit':
         break
+    
+    if user_input.lower() not in ALLOWED_COMMANDS:
+        print(f"Comando no válido. Permitidos: {', '.join(sorted(ALLOWED_COMMANDS))}")
+        continue
     
     send_command(user_input)
