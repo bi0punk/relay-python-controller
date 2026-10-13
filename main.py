@@ -1,8 +1,9 @@
+import logging
 import os
 import socket
-import logging
-from flask import Flask, render_template, request, jsonify, abort
+
 from dotenv import load_dotenv
+from flask import Flask, abort, jsonify, render_template, request
 
 load_dotenv()
 
@@ -14,8 +15,15 @@ ARDUINO_PORT = int(os.environ.get("ARDUINO_PORT", "80"))
 API_TOKEN = os.environ.get("API_TOKEN")
 
 ALLOWED_COMMANDS = {
-    "on1", "off1", "on2", "off2", "on3", "off3",
-    "read_humidity", "read_temp", "read_all"
+    "on1",
+    "off1",
+    "on2",
+    "off2",
+    "on3",
+    "off3",
+    "read_humidity",
+    "read_temp",
+    "read_all",
 }
 
 
@@ -33,7 +41,7 @@ def send_command(command):
             s.sendall(command.encode())
             data = s.recv(1024)
         return data.decode()
-    except socket.timeout:
+    except TimeoutError:
         app.logger.error("Timeout connecting to Arduino at %s:%s", ARDUINO_IP, ARDUINO_PORT)
         return None
     except Exception as e:
@@ -43,7 +51,9 @@ def send_command(command):
 
 @app.route("/")
 def index():
-    return render_template("index.html", commands=sorted(ALLOWED_COMMANDS), api_token=API_TOKEN or "")
+    return render_template(
+        "index.html", commands=sorted(ALLOWED_COMMANDS), api_token=API_TOKEN or ""
+    )
 
 
 @app.route("/api/command", methods=["POST"])
@@ -52,7 +62,9 @@ def command():
     data = request.json
     cmd = data.get("command", "").lower()
     if cmd not in ALLOWED_COMMANDS:
-        return jsonify({"error": f"Comando no válido. Permitidos: {', '.join(sorted(ALLOWED_COMMANDS))}"}), 400
+        return jsonify(
+            {"error": f"Comando no válido. Permitidos: {', '.join(sorted(ALLOWED_COMMANDS))}"}
+        ), 400
     response = send_command(cmd)
     if response is None:
         return jsonify({"error": "No se pudo conectar con el Arduino"}), 502
